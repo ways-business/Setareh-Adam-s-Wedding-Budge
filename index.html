@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Setareh &amp; Adam's Budget</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -108,6 +111,7 @@
   .brand{ display:flex; flex-direction:column; align-items:center; margin-bottom:14px; }
   .brand-mark{ font-family:"Fraunces",serif; font-weight:680; font-size:15px; letter-spacing:.14em; color:var(--navy); }
   .brand-logo{ display:block; width:auto; height:88px; max-width:480px; object-fit:contain; }
+  .brand-logo-mobile{ display:none; }
   .brand-sub{ display:block; font-size:16px; letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
   .masthead h1{ font-size:clamp(28px,4vw,40px); font-style:italic; font-weight:500; margin-bottom:0; }
   .masthead-note{ max-width:560px; margin:0 auto; color:var(--text-secondary); font-size:14.5px; }
@@ -231,65 +235,95 @@
   footer{ margin-top:36px; text-align:center; color:var(--text-muted); font-size:12.5px; max-width:560px; margin-left:auto; margin-right:auto; }
   footer p{ margin:4px 0; }
 
-  @media (max-width:600px){
-    .page{ padding:20px 12px 40px; }
+  @media (max-width:768px){
+    html, body{ width:100%; max-width:100%; overflow-x:hidden; }
+    body{ font-size:14px; }
+    .page{ width:100%; max-width:none; padding:18px 12px 40px; overflow-x:hidden; }
 
-    .masthead{ margin-bottom:24px; }
-    .brand{ margin-bottom:10px; }
-    .brand-logo{ max-width:92vw; height:auto; max-height:88px; }
-    .masthead h1{ font-size:clamp(27px,8.5vw,34px); line-height:1.08; }
-    .brand-sub{ font-size:16px; line-height:1.25; margin:7px 0 12px; }
-    .masthead-note{ font-size:13.5px; line-height:1.55; padding:0 4px; }
+    .masthead{ margin-bottom:22px; }
+    .brand{ margin-bottom:8px; width:100%; }
+    .brand-logo-desktop{ display:none; }
+    .brand-logo-mobile{
+      display:block;
+      width:auto;
+      height:auto;
+      max-width:min(34vw, 130px);
+      max-height:37px;
+      margin:0 auto 10px;
+      object-fit:contain;
+    }
+    .masthead h1{ font-size:clamp(26px,7.6vw,34px); line-height:1.08; margin-bottom:0; padding:0 2px; }
+    .brand-sub{ font-size:16px; line-height:1.25; margin:7px 0 12px; letter-spacing:.08em; }
+    .masthead-note{ max-width:34rem; font-size:13.5px; line-height:1.5; padding:0 2px; }
 
     .summary-bar{
       position:static;
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:14px;
-      padding:16px;
-      margin-bottom:20px;
-    }
-    .summary-field{ min-width:0; }
-    .summary-field input{ width:100%; min-width:0; }
-    .currency-input{ width:100%; }
-    .currency-input input{ width:100%; min-width:0; }
-    .summary-readout{ grid-column:1 / -1; margin-left:0; text-align:left; }
-    .readout-value{ font-size:20px; line-height:1.2; }
-    .variance-pill{
-      grid-column:1 / -1;
+      grid-template-columns:1fr;
+      gap:13px;
       width:100%;
+      min-width:0;
+      padding:15px;
+      margin-bottom:18px;
+      border-radius:14px;
+    }
+    .summary-field, .summary-readout{ width:100%; min-width:0; }
+    .summary-field input{ width:100%; min-width:0; font-size:16px; }
+    .currency-input{ width:100%; min-width:0; }
+    .currency-input input{ width:100%; min-width:0; font-size:16px; }
+    .summary-readout{ margin-left:0; text-align:left; }
+    .readout-value{ font-size:20px; line-height:1.2; overflow-wrap:anywhere; }
+    .variance-pill{
+      width:100%;
+      max-width:100%;
       white-space:normal;
+      overflow-wrap:anywhere;
       line-height:1.35;
       align-items:flex-start;
       padding:10px 13px;
     }
     .pill-dot{ margin-top:4px; }
 
-    .layout{ gap:16px; }
-    .table-panel, .card{ border-radius:14px; padding:16px; }
-    .table-panel{ padding-bottom:6px; }
+    .layout{ grid-template-columns:minmax(0,1fr); gap:16px; width:100%; min-width:0; }
+    .table-panel, .card{ width:100%; min-width:0; border-radius:14px; padding:16px; }
+    .table-panel{ padding-bottom:6px; overflow:hidden; }
     .table-scroll{
+      width:calc(100% + 32px);
+      max-width:none;
       margin:0 -16px;
       padding:0 16px 12px;
+      overflow-x:auto;
+      overflow-y:hidden;
       -webkit-overflow-scrolling:touch;
       overscroll-behavior-x:contain;
     }
-    table{ min-width:600px; }
+    table{ min-width:620px; }
     tbody td, tfoot td{ padding:9px 8px; }
     .cat-note{ max-width:220px; }
     .card{ margin-bottom:16px; }
     footer{ margin-top:26px; padding:0 4px; }
   }
+
+  @media (max-width:420px){
+    .page{ padding-left:10px; padding-right:10px; }
+    .brand-logo-mobile{ max-width:min(36vw, 115px); max-height:34px; margin-bottom:10px; }
+    .masthead h1{ font-size:clamp(24px,7.4vw,30px); }
+    .brand-sub{ font-size:14px; }
+    .summary-bar{ padding:14px; }
+    .table-panel, .card{ padding:14px; }
+    .table-scroll{ width:calc(100% + 28px); margin:0 -14px; padding-left:14px; padding-right:14px; }
+  }
 </style>
+
+</head>
+<body>
 
 <div class="page">
 
   <header class="masthead">
     <div class="brand">
-      <picture>
-        <source media="(max-width: 600px)" srcset="logo_mobile.svg">
-        <img class="brand-logo" src="logo.svg" alt="Maison De La Fork">
-      </picture>
+      <img class="brand-logo brand-logo-desktop" src="logo.svg" alt="Maison De La Fork">
+      <img class="brand-logo brand-logo-mobile" src="logo_mobile.svg" alt="Maison De La Fork">
     </div>
     <h1>Setareh &amp; Adam's Wedding Budget</h1>
     <span class="brand-sub">Wedding Planning &amp; Design</span>
@@ -450,7 +484,58 @@
     ]
   };
 
-  var state = JSON.parse(JSON.stringify(ORIGINAL));
+  var STORAGE_KEY = "mdlf_setareh_adam_budget_v1";
+
+  function cloneOriginal(){
+    return JSON.parse(JSON.stringify(ORIGINAL));
+  }
+
+  function loadState(){
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return cloneOriginal();
+
+      var parsed = JSON.parse(saved);
+      if (!parsed || !Array.isArray(parsed.categories)) return cloneOriginal();
+
+      // Merge saved values into the current structure so future HTML updates stay compatible.
+      var fresh = cloneOriginal();
+      fresh.guestCount = Number(parsed.guestCount) > 0 ? Number(parsed.guestCount) : fresh.guestCount;
+      fresh.totalBudget = Number(parsed.totalBudget) >= 0 ? Number(parsed.totalBudget) : fresh.totalBudget;
+      fresh.contingencyPct = Number(parsed.contingencyPct) >= 0 ? Number(parsed.contingencyPct) : fresh.contingencyPct;
+      fresh.plannerPct = Number(parsed.plannerPct) >= 0 ? Number(parsed.plannerPct) : fresh.plannerPct;
+
+      var savedByKey = {};
+      parsed.categories.forEach(function(c){
+        if (c && c.key) savedByKey[c.key] = c;
+      });
+      fresh.categories.forEach(function(c){
+        var savedCat = savedByKey[c.key];
+        if (!savedCat) return;
+        if (Number(savedCat.low) >= 0) c.low = Number(savedCat.low);
+        if (Number(savedCat.high) >= 0) c.high = Number(savedCat.high);
+      });
+      return fresh;
+    } catch (e) {
+      return cloneOriginal();
+    }
+  }
+
+  function saveState(){
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {
+      // If storage is unavailable, the planner still works normally for this session.
+    }
+  }
+
+  function clearSavedState(){
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {}
+  }
+
+  var state = loadState();
 
   var fmtUSD0 = new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", maximumFractionDigits:0 });
   var fmtUSD2 = new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", minimumFractionDigits:2, maximumFractionDigits:2 });
@@ -482,7 +567,8 @@
     });
   }
 
-  function recalc(){
+  function recalc(shouldSave){
+    if (shouldSave === undefined) shouldSave = true;
     var totalBudget = state.totalBudget;
     var guestCount = state.guestCount || 1;
 
@@ -560,6 +646,8 @@
     tVariance.style.color = cls === "is-good" ? "var(--good)" : (cls === "is-warning" ? "var(--warning)" : "var(--critical)");
 
     buildChart(contingencyLow, contingencyHigh, plannerLow, plannerHigh);
+
+    if (shouldSave) saveState();
   }
 
   function buildChart(contingencyLow, contingencyHigh, plannerLow, plannerHigh){
@@ -607,16 +695,26 @@
     recalc();
   });
   document.getElementById("resetBtn").addEventListener("click", function(){
-    state = JSON.parse(JSON.stringify(ORIGINAL));
+    state = cloneOriginal();
+    clearSavedState();
     document.getElementById("guestCount").value = state.guestCount;
     document.getElementById("totalBudget").value = state.totalBudget;
     document.getElementById("contingencyPct").value = state.contingencyPct;
     document.getElementById("plannerPct").value = state.plannerPct;
     buildRows();
-    recalc();
+    recalc(false);
   });
 
+  // Restore saved values into the visible controls on page load.
+  document.getElementById("guestCount").value = state.guestCount;
+  document.getElementById("totalBudget").value = state.totalBudget;
+  document.getElementById("contingencyPct").value = state.contingencyPct;
+  document.getElementById("plannerPct").value = state.plannerPct;
+
   buildRows();
-  recalc();
+  recalc(false);
 })();
 </script>
+
+</body>
+</html>
