@@ -29,8 +29,14 @@
 
   var STORAGE_KEY = "mdlf_setareh_adam_budget_v1";
 
+  // Cloud storage (Firebase Realtime Database)
+  // After creating your free Firebase database, replace this URL.
+  var CLOUD_DB_URL = "https://setareh-budget-default-rtdb.firebaseio.com";
+
   function cloneOriginal(){
-    return JSON.parse(JSON.stringify(ORIGINAL));
+    var copy = JSON.parse(JSON.stringify(ORIGINAL));
+    copy.categories.forEach(function(c){ c.high = c.low; });
+    return copy;
   }
 
   function loadState(){
@@ -56,7 +62,7 @@
         var savedCat = savedByKey[c.key];
         if (!savedCat) return;
         if (Number(savedCat.low) >= 0) c.low = Number(savedCat.low);
-        if (Number(savedCat.high) >= 0) c.high = Number(savedCat.high);
+        c.high = c.low;
       });
       return fresh;
     } catch (e) {
@@ -67,10 +73,36 @@
   function saveState(){
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+      // Save a shared copy on Firebase (works with GitHub Pages because it is a static site).
+      if (CLOUD_DB_URL && !CLOUD_DB_URL.includes("PASTE_YOUR")) {
+        fetch(CLOUD_DB_URL + "/budget.json", {
+          method: "PUT",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(state)
+        }).catch(function(){});
+      }
       announceStatus("Saved");
-    } catch (e) {
-      // If storage is unavailable, the planner still works normally for this session.
-    }
+    } catch (e) {}
+  }
+
+  function loadCloudState(){
+    if (!CLOUD_DB_URL || CLOUD_DB_URL.includes("PASTE_YOUR")) return;
+
+    fetch(CLOUD_DB_URL + "/budget.json")
+      .then(function(r){ return r.json(); })
+      .then(function(remote){
+        if (!remote || !Array.isArray(remote.categories)) return;
+        state = remote;
+        state.categories.forEach(function(c){ c.high = c.low; });
+        document.getElementById("guestCount").value = state.guestCount;
+        document.getElementById("totalBudget").value = state.totalBudget;
+        document.getElementById("contingencyPct").value = state.contingencyPct;
+        document.getElementById("plannerPct").value = state.plannerPct;
+        buildRows();
+        recalc(false, false);
+      })
+      .catch(function(){});
   }
 
   function clearSavedState(){
@@ -80,6 +112,7 @@
   }
 
   var state = loadState();
+  state.categories.forEach(function(c){ c.high = c.low; });
 
   var fmtUSD0 = new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", maximumFractionDigits:0 });
   var fmtUSD2 = new Intl.NumberFormat("en-US", { style:"currency", currency:"USD", minimumFractionDigits:2, maximumFractionDigits:2 });
@@ -105,8 +138,8 @@
       // "Included" just labels how a category is currently billed (bundled into the
       // Venue package) — it's still a real number the couple may want to adjust
       // later, so it stays a normal editable field like every other category.
-      var lowCell = '<td class="num" data-label="Low"><div class="cell-currency"><span>$</span><input type="number" step="50" min="0" data-idx="' + i + '" data-field="low" value="' + cat.low + '"></div></td>';
-      var highCell = '<td class="num" data-label="High"><div class="cell-currency"><span>$</span><input type="number" step="50" min="0" data-idx="' + i + '" data-field="high" value="' + cat.high + '"></div></td>';
+      var lowCell = '<td class="num" data-label="Estimated Cost"><div class="cell-currency"><span>$</span><input type="number" step="50" min="0" data-idx="' + i + '" data-field="low" value="' + cat.low + '"></div></td>';
+      var highCell = '';
 
       tr.innerHTML =
         '<td class="cat-name" data-label="Category">' + cat.name + (cat.note ? '<span class="cat-note">' + cat.note + '</span>' : '') + '</td>' +
@@ -201,23 +234,19 @@
     });
 
     document.getElementById("contingencyLowOut").textContent  = fmtUSD0.format(contingencyLow);
-    document.getElementById("contingencyHighOut").textContent = fmtUSD0.format(contingencyHigh);
     document.getElementById("subtotalLowOut").textContent  = fmtUSD0.format(subtotalLow);
-    document.getElementById("subtotalHighOut").textContent = fmtUSD0.format(subtotalHigh);
     document.getElementById("subtotalPctOut").textContent  = totalBudget > 0 ? fmtPct1(((subtotalLow+subtotalHigh)/2)/totalBudget) : "—";
     document.getElementById("plannerLowOut").textContent  = fmtUSD0.format(plannerLow);
-    document.getElementById("plannerHighOut").textContent = fmtUSD0.format(plannerHigh);
     document.getElementById("totalLowOut").textContent  = fmtUSD0.format(totalLow);
-    document.getElementById("totalHighOut").textContent = fmtUSD0.format(totalHigh);
     document.getElementById("totalPctOut").textContent  = totalBudget > 0 ? fmtPct1(((totalLow+totalHigh)/2)/totalBudget) : "—";
 
-    document.getElementById("totalRangeOut").textContent = fmtUSD0.format(totalLow) + " – " + fmtUSD0.format(totalHigh);
+    document.getElementById("totalRangeOut").textContent = fmtUSD0.format(totalLow);
 
-    document.getElementById("t-subtotal").textContent = fmtUSD0.format(subtotalLow) + " – " + fmtUSD0.format(subtotalHigh);
-    document.getElementById("t-planner").textContent  = fmtUSD0.format(plannerLow) + " – " + fmtUSD0.format(plannerHigh);
-    document.getElementById("t-total").textContent    = fmtUSD0.format(totalLow) + " – " + fmtUSD0.format(totalHigh);
+    document.getElementById("t-subtotal").textContent = fmtUSD0.format(subtotalLow);
+    document.getElementById("t-planner").textContent  = fmtUSD0.format(plannerLow);
+    document.getElementById("t-total").textContent    = fmtUSD0.format(totalLow);
     document.getElementById("t-budget").textContent   = fmtUSD0.format(totalBudget);
-    document.getElementById("t-perguest").textContent = fmtUSD2.format(costPerGuestLow) + " – " + fmtUSD2.format(costPerGuestHigh);
+    document.getElementById("t-perguest").textContent = fmtUSD2.format(costPerGuestLow);
 
     // Variance pill: use the worst case (High total) to decide status, show both ends
     var pill = document.getElementById("variancePill");
@@ -227,21 +256,21 @@
     var pctOverHigh = totalBudget > 0 ? (totalHigh - totalBudget) / totalBudget : 0;
     var label, cls;
     if (varianceLow >= 0 && varianceHigh >= 0) {
-      cls = "is-good"; label = "Under budget by " + fmtUSD0.format(Math.min(varianceLow, varianceHigh)) + "–" + fmtUSD0.format(Math.max(varianceLow, varianceHigh));
+      cls = "is-good"; label = "Under budget by " + fmtUSD0.format(varianceLow);
     } else if (pctOverHigh <= 0.05 && varianceLow >= 0) {
-      cls = "is-warning"; label = "Within " + fmtUSD0.format(Math.abs(varianceHigh)) + " of budget at the high end";
+      cls = "is-warning"; label = "Within " + fmtUSD0.format(Math.abs(varianceLow)) + " of budget";
     } else {
       cls = "is-critical";
       var lo = Math.min(varianceLow, varianceHigh), hi = Math.max(varianceLow, varianceHigh);
       if (hi <= 0) {
-        label = "Over budget by " + fmtUSD0.format(Math.abs(hi)) + "–" + fmtUSD0.format(Math.abs(lo));
+        label = "Over budget by " + fmtUSD0.format(Math.abs(varianceLow));
       } else {
-        label = "Over budget by up to " + fmtUSD0.format(Math.abs(lo));
+        label = "Over budget by " + fmtUSD0.format(Math.abs(varianceLow));
       }
     }
     pill.classList.add(cls);
     varText.textContent = label;
-    tVariance.textContent = fmtUSD0.format(varianceLow) + " – " + fmtUSD0.format(varianceHigh);
+    tVariance.textContent = fmtUSD0.format(varianceLow);
     tVariance.style.color = cls === "is-good" ? "var(--good)" : (cls === "is-warning" ? "var(--warning)" : "var(--critical)");
 
     buildChart(contingencyLow, contingencyHigh, plannerLow, plannerHigh);
@@ -337,4 +366,5 @@
 
   buildRows();
   recalc(false, false);
+  loadCloudState();
 })();

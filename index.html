@@ -51,14 +51,13 @@
 
     <section class="table-panel">
       <h2>Category Breakdown</h2>
-      <p class="panel-sub">Low and High reflect the range for each category — edit either number to explore what-ifs.</p>
+      <p class="panel-sub">Each category shows a single estimated cost — edit any number to explore different scenarios.</p>
       <div class="table-scroll">
         <table>
           <thead>
             <tr>
               <th>Category</th>
-              <th class="num">Low</th>
-              <th class="num">High</th>
+              <th class="num">Estimated Cost</th>
               <th class="num">% of budget</th>
               <th>Status</th>
             </tr>
@@ -69,15 +68,13 @@
               <td class="cat-name" data-label="Category">Contingency
                 <span class="pct-input"><input type="number" id="contingencyPct" value="8" step="0.5" min="0" aria-label="Contingency percent of total budget">%</span>
               </td>
-              <td class="num locked" id="contingencyLowOut" data-label="Low">—</td>
-              <td class="num locked" id="contingencyHighOut" data-label="High">—</td>
+              <td class="num locked" id="contingencyLowOut" data-label="Estimated Cost">—</td>
               <td class="num pct" data-label="% of budget">—</td>
               <td data-label="Status"><span class="badge included">of Total Budget</span></td>
             </tr>
             <tr class="row-subtotal">
               <td class="cat-name" data-label="Category">Subtotal</td>
-              <td class="num" id="subtotalLowOut" data-label="Low">—</td>
-              <td class="num" id="subtotalHighOut" data-label="High">—</td>
+              <td class="num" id="subtotalLowOut" data-label="Estimated Cost">—</td>
               <td class="num pct" id="subtotalPctOut" data-label="% of budget">—</td>
               <td></td>
             </tr>
@@ -85,15 +82,13 @@
               <td class="cat-name" data-label="Category">Planner &amp; Coordination Fee (MdLF)
                 <span class="pct-input"><input type="number" id="plannerPct" value="15" step="0.5" min="0" aria-label="Planner fee percent of subtotal">%</span>
               </td>
-              <td class="num locked" id="plannerLowOut" data-label="Low">—</td>
-              <td class="num locked" id="plannerHighOut" data-label="High">—</td>
+              <td class="num locked" id="plannerLowOut" data-label="Estimated Cost">—</td>
               <td class="num pct" data-label="% of budget">—</td>
               <td data-label="Status"><span class="badge included">of Subtotal</span></td>
             </tr>
             <tr class="row-total">
               <td class="cat-name" data-label="Category">Total</td>
-              <td class="num" id="totalLowOut" data-label="Low">—</td>
-              <td class="num" id="totalHighOut" data-label="High">—</td>
+              <td class="num" id="totalLowOut" data-label="Estimated Cost">—</td>
               <td class="num pct" id="totalPctOut" data-label="% of budget">—</td>
               <td></td>
             </tr>
@@ -117,7 +112,7 @@
         <h2>Totals</h2>
         <div class="totals-list">
           <div class="totals-row">
-            <span class="label">Subtotal (Low–High)</span>
+            <span class="label">Subtotal Estimated</span>
             <span class="value" id="t-subtotal">—</span>
           </div>
           <div class="totals-row">
