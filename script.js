@@ -20,7 +20,7 @@
       { key:"lighting", name:"Lighting", low:6250, high:7500, status:"Draft" },
       { key:"entertainment", name:"Entertainment", low:15000, high:18000, status:"Updated" },
       { key:"photo",    name:"Photography & Videography", low:35000, high:40000, status:"Updated" },
-      { key:"stationery", name:"Stationery & Signage", low:3250, high:3900, status:"Draft" },
+      { key:"stationery", name:"Stationery & Signage", low:15000, high:15000, status:"Draft" },
       { key:"attire",   name:"Attire & Beauty", low:7500, high:9000, status:"Draft" },
       { key:"gifts",    name:"Gifts & Favors", low:4000, high:6000, status:"Updated" },
       { key:"sofreh",   name:"Cultural / Sofreh Aghd Elements", low:7000, high:7000, status:"Confirmed" }
